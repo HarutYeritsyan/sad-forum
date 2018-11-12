@@ -130,7 +130,7 @@ io.on('connection', function(sock) {
   	});
 });
 
-dm.Start('127.0.0.1', '9002',function () {
+dm.Start('127.0.0.1', '9001',function () {
   // Listen for connections !!
   http.listen (10000, on_startup);
 });
