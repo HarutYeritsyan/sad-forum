@@ -2,7 +2,9 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var dm = require('./dm_remote.js');
+var dm = require('./dm_remote_rr.js');
+var zmq = require('zmq');
+var subscriber = zmq.socket('sub');
 
 var viewsdir = __dirname + '/views';
 app.set('views', viewsdir)
@@ -49,16 +51,18 @@ io.on('connection', function(sock) {
 		msg.ts = new Date(); // timestamp
 		if (msg.isPrivate) {
 			dm.addPrivateMessage (msg, function () {
-				io.emit('message', JSON.stringify(msg));
+				console.log('private msg sent forum -> server');
+				// io.emit('message', JSON.stringify(msg));
 			});
 		} else {
 			dm.addPublicMessage (msg, function () {
-				io.emit('message', JSON.stringify(msg));
+				console.log('public msg sent forum -> server');
+				// io.emit('message', JSON.stringify(msg));
 			});
 		}
 	});
 
-    // New subject added to storage, and broadcasted
+	// New subject added to storage, and broadcasted
     sock.on('new subject', function (sbj) {
     	dm.addSubject(sbj, function (id) {
     		console.log("Event: new subject: " + sbj + '-->' + id);
@@ -130,7 +134,22 @@ io.on('connection', function(sock) {
   	});
 });
 
-dm.Start('127.0.0.1', '9001',function () {
+subscriber.on('message', function(reply) {
+	console.log('reply received server -> forum: ', reply);
+	io.emit('message', reply.obj);
+});
+
+var args = process.argv.slice(2);
+if (args.length > 0) {
+	HOST = args[0];
+	PORT = args[1];
+	SUBSCRIBE_URL = args[2];
+}
+
+subscriber.connect('tcp://127.0.0.1:9002');
+subscriber.subscribe('');
+
+dm.Start('tcp://127.0.0.1', '9001', function () {
   // Listen for connections !!
   http.listen (10000, on_startup);
 });

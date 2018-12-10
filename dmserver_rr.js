@@ -9,6 +9,7 @@ var MESSAGE_END = '#@FIN_MENSAJE@#';
 
 // Create the server socket, on client connections, bind event handlers
 var responder = zmq.socket('rep');
+var publisher = zmq.socket('pub');
 responder.on('message', function (data) {
 
 	console.log('request comes in...' + data);
@@ -38,9 +39,12 @@ responder.on('message', function (data) {
 				break;
 			case 'add public message':
 				reply.obj = dm.addPublicMessage(invo.msg);
+				publisher.send(reply);
+				console.log('published msg from server: ', JSON.stringify(reply));
 				break;
 			case 'add private message':
 				reply.obj = dm.addPrivateMessage(invo.msg);
+				publisher.send(invo.msg);
 				break;
 			case 'get user list':
 				reply.obj = dm.getUserList();
@@ -59,8 +63,16 @@ var args = process.argv.slice(2);
 if (args.length > 0) {
 	HOST = args[0];
 	PORT = args[1];
+	PUBLISH_PORT = args[2];
 }
 
-responder.bind(HOST + ':' + PORT);
+responder.bind('tcp://127.0.0.1' + ':' + '9001', err =>{
+	if (err) console.log ("responder bind err: " + err)
+	else console.log ("responder bind ok")
+});
+publisher.bind('tcp://127.0.0.1' + ':' + '9002', err =>{
+	if (err) console.log ("publisher bind err: " + err)
+	else console.log ("publisher bind ok")
+});
 
 
