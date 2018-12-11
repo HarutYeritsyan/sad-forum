@@ -48,16 +48,14 @@ io.on('connection', function(sock) {
   	sock.on('message', function(msgStr){
   		console.log("Event: message: " + msgStr);
   		var msg = JSON.parse (msgStr);
-		msg.ts = new Date(); // timestamp
+		  msg.ts = new Date(); // timestamp
 		if (msg.isPrivate) {
 			dm.addPrivateMessage (msg, function () {
 				console.log('private msg sent forum -> server');
-				// io.emit('message', JSON.stringify(msg));
 			});
 		} else {
 			dm.addPublicMessage (msg, function () {
 				console.log('public msg sent forum -> server');
-				// io.emit('message', JSON.stringify(msg));
 			});
 		}
 	});
@@ -135,8 +133,8 @@ io.on('connection', function(sock) {
 });
 
 subscriber.on('message', function(reply) {
-	console.log('reply received server -> forum: ', reply);
-	io.emit('message', reply.obj);
+  var replyString = reply.toString('utf8');
+	io.emit('message', replyString);
 });
 
 var args = process.argv.slice(2);

@@ -39,12 +39,11 @@ responder.on('message', function (data) {
 				break;
 			case 'add public message':
 				reply.obj = dm.addPublicMessage(invo.msg);
-				publisher.send(reply);
-				console.log('published msg from server: ', JSON.stringify(reply));
+				publisher.send(JSON.stringify(invo.msg));
 				break;
 			case 'add private message':
 				reply.obj = dm.addPrivateMessage(invo.msg);
-				publisher.send(invo.msg);
+				publisher.send(JSON.stringify(invo.msg));
 				break;
 			case 'get user list':
 				reply.obj = dm.getUserList();
