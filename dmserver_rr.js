@@ -2,6 +2,7 @@ var zmq = require('zmq');
 
 var HOST = '127.0.0.1';
 var PORT = 9001;
+var PUBLISH_PORT = 9002;
 
 var dm = require('./dm.js');
 
@@ -65,11 +66,11 @@ if (args.length > 0) {
 	PUBLISH_PORT = args[2];
 }
 
-responder.bind('tcp://127.0.0.1' + ':' + '9001', err =>{
+responder.bind(HOST + ':' + PORT, err =>{
 	if (err) console.log ("responder bind err: " + err)
 	else console.log ("responder bind ok")
 });
-publisher.bind('tcp://127.0.0.1' + ':' + '9002', err =>{
+publisher.bind(HOST + ':' + PUBLISH_PORT, err =>{
 	if (err) console.log ("publisher bind err: " + err)
 	else console.log ("publisher bind ok")
 });

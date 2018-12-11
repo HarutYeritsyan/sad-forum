@@ -132,8 +132,8 @@ io.on('connection', function(sock) {
   	});
 });
 
-subscriber.on('message', function(reply) {
-  var replyString = reply.toString('utf8');
+subscriber.on('message', function(replyBuffer) {
+  var replyString = replyBuffer.toString('utf8');
 	io.emit('message', replyString);
 });
 
@@ -144,10 +144,10 @@ if (args.length > 0) {
 	SUBSCRIBE_URL = args[2];
 }
 
-subscriber.connect('tcp://127.0.0.1:9002');
+subscriber.connect(SUBSCRIBE_URL);
 subscriber.subscribe('');
 
-dm.Start('tcp://127.0.0.1', '9001', function () {
+dm.Start(HOST, PORT, function () {
   // Listen for connections !!
   http.listen (10000, on_startup);
 });
