@@ -5,6 +5,8 @@ var PORT = 9001;
 var CMD = '';
 var CMD_ARG_1 = '';
 var CMD_ARG_2 = '';
+var CMD_ARG_3 = '';
+var CMD_ARG_4 = '';
 
 
 var args = process.argv.slice(2);
@@ -23,10 +25,22 @@ if (args.length > 2) {
 	if (commandParts.length > 2) {
 		CMD_ARG_2 = commandParts[2];
 	}
+	if (commandParts.length > 2) {
+		CMD_ARG_3 = commandParts[3];
+	}
+	if (commandParts.length > 2) {
+		CMD_ARG_4 = commandParts[4];
+	}
 
 } else {
-	console.log('Usage: node dmclient.js HOST PORT CMD');
+	console.log('Usage: node dmclient.js HOST PORT CMD [...CMD ARGS]');
 	return;
+}
+
+// Messages are objects with some specific fields
+// the message itself, who sends, destination, whether is private message, timestamp 
+function Message(msg, from, to, isPrivate, ts) {
+	this.msg = msg; this.from = from; this.isPrivate = isPrivate; this.to = to; this.ts = ts;
 }
 
 function parseCommand(cmd, cb) {
@@ -64,8 +78,10 @@ function parseCommand(cmd, cb) {
 			});
 			break;
 		case 'add public message':
-			dm.addPublicMessage(CMD_ARG_1, function () {
-				console.log('public message ' + CMD_ARG_1 + ' added');
+			var msg = new Message(CMD_ARG_1, CMD_ARG_2, CMD_ARG_3, CMD_ARG_4 ? true : false, '');
+			msg.ts = new Date();
+			dm.addPublicMessage(msg, function () {
+				console.log('public message ' + msg.msg + ' added');
 				cb();
 			});
 			break;
