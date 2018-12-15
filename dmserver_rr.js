@@ -66,13 +66,13 @@ if (args.length > 0) {
 	PUBLISH_PORT = args[2];
 }
 
-responder.bind(HOST + ':' + PORT, err =>{
-	if (err) console.log ("responder bind err: " + err)
-	else console.log ("responder bind ok")
+responder.bind(HOST + ':' + PORT, err => {
+	if (err) console.log("responder bind err: " + err)
+	else console.log("responder bind ok")
 });
-publisher.bind(HOST + ':' + PUBLISH_PORT, err =>{
-	if (err) console.log ("publisher bind err: " + err)
-	else console.log ("publisher bind ok")
+publisher.bind(HOST + ':' + PUBLISH_PORT, err => {
+	if (err) console.log("publisher bind err: " + err)
+	else console.log("publisher bind ok")
 });
 
 

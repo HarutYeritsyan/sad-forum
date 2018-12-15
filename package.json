@@ -2,9 +2,16 @@
   "name": "forum-sad",
   "version": "0.0.1",
   "description": "SAD lab forum practice",
+  "scripts": {
+    "dmserver_rr": "nodemon dmserver_rr.js 'tcp://127.0.0.1' 9001 9002",
+    "forum_rr": "nodemon forum_rr.js 'tcp://127.0.0.1' 9001 'tcp://127.0.0.1:9002'"
+  },
   "dependencies": {
     "express": "4.8.0",
     "socket.io": "1.0.2",
     "zmq": "^2.15.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
   }
 }
