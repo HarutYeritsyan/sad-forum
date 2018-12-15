@@ -9,6 +9,7 @@ var subscriber = zmq.socket('sub');
 var viewsdir = __dirname + '/views';
 app.set('views', viewsdir)
 
+var WEBSERVER_TOPIC = 'webserver';
 
 // called on connection
 function get_page(req, res) {
@@ -132,7 +133,7 @@ io.on('connection', function (sock) {
 	});
 });
 
-subscriber.on('message', function (replyBuffer) {
+subscriber.on('message', function (topicBuffer, replyBuffer) {
 	var replyString = replyBuffer.toString('utf8');
 	io.emit('message', replyString);
 });
@@ -145,7 +146,7 @@ if (args.length > 0) {
 }
 
 subscriber.connect(SUBSCRIBE_URL);
-subscriber.subscribe('');
+subscriber.subscribe(WEBSERVER_TOPIC);
 
 dm.Start(HOST, PORT, function () {
 	// Listen for connections !!

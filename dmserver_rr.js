@@ -7,10 +7,16 @@ var PUBLISH_PORT = 9002;
 var dm = require('./dm.js');
 
 var MESSAGE_END = '#@FIN_MENSAJE@#';
+var WEBSERVER_TOPIC = 'webserver';
 
 // Create the server socket, on client connections, bind event handlers
 var responder = zmq.socket('rep');
 var publisher = zmq.socket('pub');
+
+function sendToWebServer(message) {
+	publisher.send([WEBSERVER_TOPIC, message]);
+}
+
 responder.on('message', function (data) {
 
 	console.log('request comes in...' + data);
@@ -40,11 +46,10 @@ responder.on('message', function (data) {
 				break;
 			case 'add public message':
 				reply.obj = dm.addPublicMessage(invo.msg);
-				publisher.send(JSON.stringify(invo.msg));
+				sendToWebServer(JSON.stringify(invo.msg));
 				break;
 			case 'add private message':
 				reply.obj = dm.addPrivateMessage(invo.msg);
-				publisher.send(JSON.stringify(invo.msg));
 				break;
 			case 'get user list':
 				reply.obj = dm.getUserList();
