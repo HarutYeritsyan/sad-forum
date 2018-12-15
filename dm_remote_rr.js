@@ -85,9 +85,9 @@ exports.addPrivateMessage = function (msg, cb) {
 	invo.msg = msg;
 	requester.send(JSON.stringify(invo) + MESSAGE_END);
 }
-exports.addPublicMessage = function(msg, cb) {
-	invo= new Invo('add public message',cb);
-	invo.msg=msg;
+exports.addPublicMessage = function (msg, cb) {
+	invo = new Invo('add public message', cb);
+	invo.msg = msg;
 	requester.send(JSON.stringify(invo) + MESSAGE_END);
 }
 
