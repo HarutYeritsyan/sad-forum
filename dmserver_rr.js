@@ -8,13 +8,21 @@ var dm = require('./dm.js');
 
 var MESSAGE_END = '#@FIN_MENSAJE@#';
 var WEBSERVER_TOPIC = 'webserver';
+var DATASERVER_TOPIC = 'checkpoint';
 
 // Create the server socket, on client connections, bind event handlers
 var responder = zmq.socket('rep');
 var publisher = zmq.socket('pub');
+var subscriber = zmq.socket('sub');
 
-function sendToWebServer(message) {
+var serverList = [];
+
+function sendToWebServers(message) {
 	publisher.send([WEBSERVER_TOPIC, message]);
+}
+
+function sendToDataServers(message) {
+	publisher.send([DATASERVER_TOPIC, message]);
 }
 
 responder.on('message', function (data) {
@@ -46,7 +54,8 @@ responder.on('message', function (data) {
 				break;
 			case 'add public message':
 				reply.obj = dm.addPublicMessage(invo.msg);
-				sendToWebServer(JSON.stringify(invo.msg));
+				sendToWebServers(JSON.stringify(invo.msg));
+				sendToDataServers(JSON.stringify(invo.msg));
 				break;
 			case 'add private message':
 				reply.obj = dm.addPrivateMessage(invo.msg);
@@ -69,7 +78,21 @@ if (args.length > 0) {
 	HOST = args[0];
 	PORT = args[1];
 	PUBLISH_PORT = args[2];
+	var serverUrls = args[3];
+	if (serverUrls) {
+		serverList = serverUrls.split(',');
+	}
 }
+
+serverList.forEach(serverUrl => {
+	subscriber.connect(serverUrl);
+});
+
+subscriber.subscribe(DATASERVER_TOPIC);
+subscriber.on('message', (topicBuffer, replyFromServersBuffer) => {
+	console.log('server subscription message: ', replyFromServersBuffer.toString('utf8'));
+	sendToWebServers(replyFromServersBuffer.toString('utf8'));
+});
 
 responder.bind(HOST + ':' + PORT, err => {
 	if (err) console.log("responder bind err: " + err)
