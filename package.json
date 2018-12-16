@@ -9,9 +9,9 @@
     "forum_rr-1": "nodemon forum_rr.js 'tcp://127.0.0.1' 20001 'tcp://127.0.0.1:20002'",
     "forum_rr-2": "nodemon forum_rr.js 'tcp://127.0.0.1' 20101 'tcp://127.0.0.1:20102'",
     "forum_rr-3": "nodemon forum_rr.js 'tcp://127.0.0.1' 20201 'tcp://127.0.0.1:20202'",
-    "dmclient_rr-1": "nodemon dmclient_rr.js 'tcp://127.0.0.1' 20001",
-    "dmclient_rr-2": "nodemon dmclient_rr.js 'tcp://127.0.0.1' 20101",
-    "dmclient_rr-3": "nodemon dmclient_rr.js 'tcp://127.0.0.1' 20201"
+    "dmclient_rr-1": "node dmclient_rr.js 'tcp://127.0.0.1' 20001",
+    "dmclient_rr-2": "node dmclient_rr.js 'tcp://127.0.0.1' 20101",
+    "dmclient_rr-3": "node dmclient_rr.js 'tcp://127.0.0.1' 20201"
   },
   "dependencies": {
     "express": "4.8.0",
