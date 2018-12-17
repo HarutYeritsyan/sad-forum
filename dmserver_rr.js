@@ -17,6 +17,14 @@ var subscriber = zmq.socket('sub');
 
 var serverList = [];
 
+function retardo(n) {
+	var time = new Date().getTime();
+	var time2 = time + n;
+	while (time < time2) {
+		time = new Date().getTime();
+	}
+}
+
 function sendToWebServers(message) {
 	publisher.send([WEBSERVER_TOPIC, message]);
 }
