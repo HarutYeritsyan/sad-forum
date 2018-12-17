@@ -143,6 +143,7 @@ if (args.length > 0) {
 	HOST = args[0];
 	PORT = args[1];
 	SUBSCRIBE_URL = args[2];
+	WEBSERVER_PORT = args[3];
 }
 
 subscriber.connect(SUBSCRIBE_URL);
@@ -150,5 +151,5 @@ subscriber.subscribe(WEBSERVER_TOPIC);
 
 dm.Start(HOST, PORT, function () {
 	// Listen for connections !!
-	http.listen(10000, on_startup);
+	http.listen(WEBSERVER_PORT, on_startup);
 });

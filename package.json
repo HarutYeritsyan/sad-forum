@@ -6,9 +6,9 @@
     "dmserver_rr-1": "nodemon dmserver_rr.js 'tcp://127.0.0.1' 20001 20002 'tcp://127.0.0.1:20102,tcp://127.0.0.1:20202'",
     "dmserver_rr-2": "nodemon dmserver_rr.js 'tcp://127.0.0.1' 20101 20102 'tcp://127.0.0.1:20002,tcp://127.0.0.1:20202'",
     "dmserver_rr-3": "nodemon dmserver_rr.js 'tcp://127.0.0.1' 20201 20202 'tcp://127.0.0.1:20002,tcp://127.0.0.1:20102'",
-    "forum_rr-1": "nodemon forum_rr.js 'tcp://127.0.0.1' 20001 'tcp://127.0.0.1:20002'",
-    "forum_rr-2": "nodemon forum_rr.js 'tcp://127.0.0.1' 20101 'tcp://127.0.0.1:20102'",
-    "forum_rr-3": "nodemon forum_rr.js 'tcp://127.0.0.1' 20201 'tcp://127.0.0.1:20202'",
+    "forum_rr-1": "nodemon forum_rr.js 'tcp://127.0.0.1' 20001 'tcp://127.0.0.1:20002' 10000",
+    "forum_rr-2": "nodemon forum_rr.js 'tcp://127.0.0.1' 20101 'tcp://127.0.0.1:20102' 10100",
+    "forum_rr-3": "nodemon forum_rr.js 'tcp://127.0.0.1' 20201 'tcp://127.0.0.1:20202' 10200",
     "dmclient_rr-1": "node dmclient_rr.js 'tcp://127.0.0.1' 20001",
     "dmclient_rr-2": "node dmclient_rr.js 'tcp://127.0.0.1' 20101",
     "dmclient_rr-3": "node dmclient_rr.js 'tcp://127.0.0.1' 20201"
