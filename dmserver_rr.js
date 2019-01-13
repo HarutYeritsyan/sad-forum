@@ -74,7 +74,6 @@ responder.on('message', function (data) {
 			case 'login':
 				reply.obj = dm.login(invo.u, invo.p);
 				break;
-			// DONE: complete all forum functions
 		}
 		console.log('reply: ', reply);
 		responder.send(JSON.stringify(reply) + MESSAGE_END);
