@@ -103,13 +103,21 @@ serverList.forEach(serverUrl => {
 subscriber.subscribe(DATASERVER_TOPIC);
 subscriber.on('message', (topicBuffer, commandBuffer, contentBuffer) => {
 	var commandString = commandBuffer.toString();
+	var contentString;
+	if (contentBuffer) {
+		contentString = contentBuffer.toString();
+	}
 	switch (commandString) {
 		case 'add public message':
-			sendToWebServers(commandString, contentBuffer.toString());
+			dm.addPublicMessage(JSON.parse(contentString));
+			sendToWebServers(commandString, contentString);
 			break;
 		case 'add subject':
-			console.log('contentBuffer.toString(): ', contentBuffer.toString());
-			sendToWebServers(commandString, contentBuffer.toString());
+			console.log('contentBuffer.toString(): ', contentString);
+			// TODO: fix addSubject function
+			// every dmserver generates its own id for a new subject
+			// dm.addSubject(JSON.parse(contentString)[]);
+			sendToWebServers(commandString, contentString);
 			break;
 		default:
 			console.log('could not parse ', commandString, ' into a command');
