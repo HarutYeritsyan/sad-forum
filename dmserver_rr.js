@@ -25,12 +25,12 @@ function retardo(n) {
 	}
 }
 
-function sendToWebServers(message) {
-	publisher.send([WEBSERVER_TOPIC, message]);
+function sendToWebServers(command, content) {
+	publisher.send([WEBSERVER_TOPIC, command, content]);
 }
 
-function sendToDataServers(message) {
-	publisher.send([DATASERVER_TOPIC, message]);
+function sendToDataServers(command, content) {
+	publisher.send([DATASERVER_TOPIC, command, content]);
 }
 
 responder.on('message', function (data) {
@@ -62,8 +62,8 @@ responder.on('message', function (data) {
 				break;
 			case 'add public message':
 				reply.obj = dm.addPublicMessage(invo.msg);
-				sendToWebServers(JSON.stringify(invo.msg));
-				sendToDataServers(JSON.stringify(invo.msg));
+				sendToWebServers('add public message', JSON.stringify(invo.msg));
+				sendToDataServers('add public message', JSON.stringify(invo.msg));
 				break;
 			case 'add private message':
 				reply.obj = dm.addPrivateMessage(invo.msg);
@@ -96,9 +96,18 @@ serverList.forEach(serverUrl => {
 });
 
 subscriber.subscribe(DATASERVER_TOPIC);
-subscriber.on('message', (topicBuffer, replyFromServersBuffer) => {
-	console.log('server subscription message: ', replyFromServersBuffer.toString('utf8'));
-	sendToWebServers(replyFromServersBuffer.toString('utf8'));
+subscriber.on('message', (topicBuffer, commandBuffer, replyFromServersBuffer) => {
+	var commandString = commandBuffer.toString();
+	var replyString;
+	switch (commandString) {
+		case 'add public message':
+			replyString = replyString = replyFromServersBuffer.toString();
+			sendToWebServers(commandString, replyString);
+			break;
+		default:
+			console.log('could not parse ', commandString, ' into a command');
+			break;
+	}
 });
 
 responder.bind(HOST + ':' + PORT, err => {

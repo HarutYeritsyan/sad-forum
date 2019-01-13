@@ -135,9 +135,18 @@ io.on('connection', function (sock) {
 	});
 });
 
-subscriber.on('message', function (topicBuffer, replyBuffer) {
-	var replyString = replyBuffer.toString('utf8');
-	io.emit('message', replyString);
+subscriber.on('message', function (topicBuffer, commandBuffer, replyBuffer) {
+	var commandString = commandBuffer.toString('utf8');
+	var replyString;
+	switch (commandString) {
+		case 'add public message':
+			replyString = replyBuffer.toString('utf8');
+			io.emit('message', replyString);
+			break;
+		default:
+			console.log('could not parse ', commandString, ' into a command');
+			break;
+	}
 });
 
 var args = process.argv.slice(2);
