@@ -87,6 +87,7 @@ function parseCommand(cmd, cb) {
 			break;
 		case 'add private message':
 			dm.addPrivateMessage(CMD_ARG_1, function () {
+				// TODO: Add new private message from dmclient
 				console.log('public message ' + CMD_ARG_1 + ' added');
 				cb();
 			});

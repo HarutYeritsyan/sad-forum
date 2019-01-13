@@ -69,6 +69,7 @@ io.on('connection', function (sock) {
 				sock.emit('new subject', 'err', 'El tema ya existe', sbj);
 			} else {
 				sock.emit('new subject', 'ack', id, sbj);
+				// TODO: move to dmserver subscription
 				io.emit('new subject', 'add', id, sbj);
 			}
 		});
@@ -82,6 +83,7 @@ io.on('connection', function (sock) {
 				sock.emit('new user', 'err', usr, 'El usuario ya existe');
 			} else {
 				sock.emit('new user', 'ack', usr);
+				// TODO: move to dmserver subscription
 				io.emit('new user', 'add', usr);
 			}
 		});
