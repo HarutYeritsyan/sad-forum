@@ -114,10 +114,9 @@ subscriber.on('message', (topicBuffer, commandBuffer, contentBuffer) => {
 			break;
 		case 'add subject':
 			console.log('contentBuffer.toString(): ', contentString);
-			// TODO: fix addSubject function
-			// every dmserver generates its own id for a new subject
-			// dm.addSubject(JSON.parse(contentString)[]);
-			sendToWebServers(commandString, contentString);
+			var sbj = JSON.parse(contentString)[1];
+			var newSubjectId = dm.addSubject(sbj);
+			sendToWebServers(commandString, JSON.stringify([newSubjectId, sbj]));
 			break;
 		default:
 			console.log('could not parse ', commandString, ' into a command');
