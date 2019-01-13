@@ -33,6 +33,11 @@ function sendToDataServers(command, content) {
 	publisher.send([DATASERVER_TOPIC, command, content]);
 }
 
+function propagateChanges(command, content) {
+	sendToWebServers(command, content);
+	sendToDataServers(command, content);
+}
+
 responder.on('message', function (data) {
 
 	console.log('request comes in...' + data);
@@ -56,14 +61,14 @@ responder.on('message', function (data) {
 				break;
 			case 'add subject':
 				reply.obj = dm.addSubject(invo.sbj);
+				propagateChanges('add subject', JSON.stringify([reply.obj, invo.sbj]));
 				break;
 			case 'add user':
 				reply.obj = dm.addUser(invo.u, invo.p);
 				break;
 			case 'add public message':
 				reply.obj = dm.addPublicMessage(invo.msg);
-				sendToWebServers('add public message', JSON.stringify(invo.msg));
-				sendToDataServers('add public message', JSON.stringify(invo.msg));
+				propagateChanges('add public message', JSON.stringify(invo.msg));
 				break;
 			case 'add private message':
 				reply.obj = dm.addPrivateMessage(invo.msg);
@@ -96,13 +101,15 @@ serverList.forEach(serverUrl => {
 });
 
 subscriber.subscribe(DATASERVER_TOPIC);
-subscriber.on('message', (topicBuffer, commandBuffer, replyFromServersBuffer) => {
+subscriber.on('message', (topicBuffer, commandBuffer, contentBuffer) => {
 	var commandString = commandBuffer.toString();
-	var replyString;
 	switch (commandString) {
 		case 'add public message':
-			replyString = replyString = replyFromServersBuffer.toString();
-			sendToWebServers(commandString, replyString);
+			sendToWebServers(commandString, contentBuffer.toString());
+			break;
+		case 'add subject':
+			console.log('contentBuffer.toString(): ', contentBuffer.toString());
+			sendToWebServers(commandString, contentBuffer.toString());
 			break;
 		default:
 			console.log('could not parse ', commandString, ' into a command');

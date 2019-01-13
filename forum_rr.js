@@ -69,8 +69,6 @@ io.on('connection', function (sock) {
 				sock.emit('new subject', 'err', 'El tema ya existe', sbj);
 			} else {
 				sock.emit('new subject', 'ack', id, sbj);
-				// TODO: move to dmserver subscription
-				io.emit('new subject', 'add', id, sbj);
 			}
 		});
 	});
@@ -135,13 +133,18 @@ io.on('connection', function (sock) {
 	});
 });
 
-subscriber.on('message', function (topicBuffer, commandBuffer, replyBuffer) {
+subscriber.on('message', function (topicBuffer, commandBuffer, contentBuffer) {
 	var commandString = commandBuffer.toString('utf8');
 	var replyString;
 	switch (commandString) {
 		case 'add public message':
-			replyString = replyBuffer.toString('utf8');
+			replyString = contentBuffer.toString('utf8');
 			io.emit('message', replyString);
+			break;
+		case 'add subject':
+			replyString = contentBuffer.toString('utf8');
+			var replyContentList = JSON.parse(replyString);
+			io.emit('new subject', 'add', replyContentList[0], replyContentList[1]);
 			break;
 		default:
 			console.log('could not parse ', commandString, ' into a command');
