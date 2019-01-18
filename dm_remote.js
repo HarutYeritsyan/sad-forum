@@ -27,7 +27,6 @@ client.on('data', function (data) {
 	dataArray.filter(el => el).forEach(dataElement => {
 		var reply = JSON.parse(dataElement);
 		switch (reply.what) {
-			// TODO complete list of commands
 			case 'get private message list':
 			case 'get public message list':
 			case 'get subject list':

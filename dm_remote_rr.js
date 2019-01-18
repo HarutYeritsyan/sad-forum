@@ -26,7 +26,6 @@ requester.on('message', function (data) {
 	dataArray.filter(el => el).forEach(dataElement => {
 		var reply = JSON.parse(dataElement);
 		switch (reply.what) {
-			// TODO complete list of commands
 			case 'get private message list':
 			case 'get public message list':
 			case 'get subject list':
@@ -117,8 +116,3 @@ exports.login = function (u, p, cb) {
 	invo.p = p;
 	requester.send(JSON.stringify(invo) + MESSAGE_END);
 }
-
-// DONE: complete the rest of the forum functions.
-
-
-
