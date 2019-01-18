@@ -116,3 +116,5 @@ exports.login = function (u, p, cb) {
 	invo.p = p;
 	requester.send(JSON.stringify(invo) + MESSAGE_END);
 }
+
+// TODO: Add disconnect function

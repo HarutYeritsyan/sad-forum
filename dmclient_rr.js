@@ -105,6 +105,7 @@ function parseCommand(cmd, cb) {
 			});
 			break;
 		default:
+			// TODO: remove getSubjectList from default command
 			dm.getSubjectList(function (ml) {
 				console.log("here it is:")
 				console.log(JSON.stringify(ml));
