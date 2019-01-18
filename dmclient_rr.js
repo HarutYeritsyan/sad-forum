@@ -13,23 +13,20 @@ var args = process.argv.slice(2);
 if (args.length > 2) {
 	HOST = args[0];
 	PORT = args[1];
+	CMD = args[2];
 
-	var commandParts = args.slice(2);
-	if (commandParts.length >= 1) {
-		CMD = commandParts[0];
+	var commandArgs = args.slice(3);
+	if (commandArgs.length > 0) {
+		CMD_ARG_1 = commandArgs[0];
 	}
-
-	if (commandParts.length > 1) {
-		CMD_ARG_1 = commandParts[1];
+	if (commandArgs.length > 1) {
+		CMD_ARG_2 = commandArgs[1];
 	}
-	if (commandParts.length > 2) {
-		CMD_ARG_2 = commandParts[2];
+	if (commandArgs.length > 2) {
+		CMD_ARG_3 = commandArgs[2];
 	}
-	if (commandParts.length > 2) {
-		CMD_ARG_3 = commandParts[3];
-	}
-	if (commandParts.length > 2) {
-		CMD_ARG_4 = commandParts[4];
+	if (commandArgs.length > 3) {
+		CMD_ARG_4 = commandArgs[3];
 	}
 
 } else {
