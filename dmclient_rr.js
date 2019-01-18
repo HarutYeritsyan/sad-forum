@@ -75,7 +75,7 @@ function parseCommand(cmd, cb) {
 			});
 			break;
 		case 'add public message':
-			var msg = new Message(CMD_ARG_1, CMD_ARG_2, CMD_ARG_3, CMD_ARG_4 ? true : false, '');
+			var msg = new Message(CMD_ARG_1, CMD_ARG_2, CMD_ARG_3, false, '');
 			msg.ts = new Date();
 			dm.addPublicMessage(msg, function () {
 				console.log('public message ' + msg.msg + ' added');
@@ -83,9 +83,11 @@ function parseCommand(cmd, cb) {
 			});
 			break;
 		case 'add private message':
-			dm.addPrivateMessage(CMD_ARG_1, function () {
+			var msg = new Message(CMD_ARG_1, CMD_ARG_2, CMD_ARG_3, true, '');
+			msg.ts = new Date();
+			dm.addPrivateMessage(msg, function () {
 				// TODO: Add new private message from dmclient
-				console.log('public message ' + CMD_ARG_1 + ' added');
+				console.log('private message ' + msg.msg + ' added');
 				cb();
 			});
 			break;
