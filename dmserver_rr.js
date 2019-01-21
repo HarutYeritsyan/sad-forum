@@ -17,6 +17,10 @@ var subscriber = zmq.socket('sub');
 
 var serverList = [];
 
+var useRetardTest1 = false;
+var useRetardTest2 = false;
+var useRetardTest3 = false;
+
 function retardo(n) {
 	var time = new Date().getTime();
 	var time2 = time + n;
@@ -94,6 +98,22 @@ if (args.length > 0) {
 	var serverUrls = args[3];
 	if (serverUrls) {
 		serverList = serverUrls.split(',');
+	}
+	if (args.length > 4) {
+		switch (args[3]) {
+			case '1':
+				useRetardTest1 = true;
+				break;
+			case '2':
+				useRetardTest2 = true;
+				break;
+			case '3':
+				useRetardTest3 = true;
+				break;
+			default:
+				console.log('incorrect test case');
+				break;
+		}
 	}
 }
 
