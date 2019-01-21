@@ -141,6 +141,10 @@ subscriber.on('message', function (topicBuffer, commandBuffer, contentBuffer) {
 			replyString = contentBuffer.toString('utf8');
 			io.emit('message', replyString);
 			break;
+		case 'add private message':
+			replyString = contentBuffer.toString('utf8');
+			io.emit('message', replyString);
+			break;
 		case 'add subject':
 			replyString = contentBuffer.toString('utf8');
 			var replyContentList = JSON.parse(replyString);

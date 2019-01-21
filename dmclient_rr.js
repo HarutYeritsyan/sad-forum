@@ -86,7 +86,6 @@ function parseCommand(cmd, cb) {
 			var msg = new Message(CMD_ARG_1, CMD_ARG_2, CMD_ARG_3, true, '');
 			msg.ts = new Date();
 			dm.addPrivateMessage(msg, function () {
-				// TODO: Add new private message from dmclient
 				console.log('private message ' + msg.msg + ' added');
 				cb();
 			});

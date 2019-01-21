@@ -79,7 +79,6 @@ exports.getPrivateMessageList = function (u1, u2, cb) {
 }
 
 exports.addPrivateMessage = function (msg, cb) {
-
 	invo = new Invo('add private message', cb);
 	invo.msg = msg;
 	requester.send(JSON.stringify(invo) + MESSAGE_END);

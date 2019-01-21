@@ -72,6 +72,7 @@ responder.on('message', function (data) {
 				break;
 			case 'add private message':
 				reply.obj = dm.addPrivateMessage(invo.msg);
+				propagateChanges('add private message', JSON.stringify(invo.msg));
 				break;
 			case 'get user list':
 				reply.obj = dm.getUserList();
@@ -110,6 +111,10 @@ subscriber.on('message', (topicBuffer, commandBuffer, contentBuffer) => {
 	switch (commandString) {
 		case 'add public message':
 			dm.addPublicMessage(JSON.parse(contentString));
+			sendToWebServers(commandString, contentString);
+			break;
+		case 'add private message':
+			dm.addPrivateMessage(JSON.parse(contentString));
 			sendToWebServers(commandString, contentString);
 			break;
 		case 'add subject':
