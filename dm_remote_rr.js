@@ -2,8 +2,11 @@ var zmq = require('zmq');
 
 var requester = zmq.socket('req');
 
+var addr = '';
+
 exports.Start = function (host, port, cb) {
 	console.log('Connecting to: ' + host + ':' + port);
+	addr = host + ':' + port;
 	requester.connect(host + ':' + port);
 	cb();
 }
@@ -117,3 +120,9 @@ exports.login = function (u, p, cb) {
 }
 
 // TODO: Add disconnect function
+exports.Disconnect = function (cb) {
+	if (requester) {
+		requester.disconnect(addr);
+	}
+	cb();
+}

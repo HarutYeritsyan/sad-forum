@@ -119,5 +119,8 @@ dm.Start(HOST, PORT, function () {
 	// Write the command to the server
 	parseCommand(CMD, function () {
 		console.log('command executed');
+		dm.Disconnect(function () {
+			console.log('connection closed');
+		});
 	});
 });
