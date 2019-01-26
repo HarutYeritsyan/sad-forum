@@ -63,14 +63,22 @@ function parseCommand(cmd, cb) {
 				cb();
 			});
 		case 'add subject':
-			dm.addSubject(CMD_ARG_1, function () {
-				console.log('subject ' + CMD_ARG_1 + ' added');
+			dm.addSubject(CMD_ARG_1, function (id) {
+				if (id > -1) {
+					console.log('subject ' + CMD_ARG_1 + ' added with id: ' + id);
+				} else {
+					console.log('Error: could not add subject ' + CMD_ARG_1);
+				}				
 				cb();
 			});
 			break;
 		case 'add user':
-			dm.addUser(CMD_ARG_1, CMD_ARG_2, function () {
-				console.log('user ' + CMD_ARG_1 + ' added');
+			dm.addUser(CMD_ARG_1, CMD_ARG_2, function (exists) {
+				if (exists) {
+					console.log('Error: user ' + CMD_ARG_1 + ' already exists');
+				} else {
+					console.log('user ' + CMD_ARG_1 + ' added');
+				}
 				cb();
 			});
 			break;

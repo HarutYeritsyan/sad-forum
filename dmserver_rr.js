@@ -30,10 +30,18 @@ function retardo(n) {
 }
 
 function sendToWebServers(command, content) {
+	if (useRetardTest1) {
+		console.log('useRetardTest1: waiting for 3000 ms before sendToWebServers');
+		retardo(3000);
+	}
 	publisher.send([WEBSERVER_TOPIC, command, content]);
 }
 
 function sendToDataServers(command, content) {
+	if (useRetardTest2 || useRetardTest3) {
+		console.log( (useRetardTest2 ? 'useRetardTest2' : 'useRetardTest3') + ': waiting for 3000 ms before sendToWebServers');
+		retardo(3000);
+	}
 	publisher.send([DATASERVER_TOPIC, command, content]);
 }
 
@@ -69,6 +77,8 @@ responder.on('message', function (data) {
 				break;
 			case 'add user':
 				reply.obj = dm.addUser(invo.u, invo.p);
+				sendToWebServers('add user', invo.u);
+				sendToDataServers('add user', JSON.stringify([invo.u, invo.p]));
 				break;
 			case 'add public message':
 				reply.obj = dm.addPublicMessage(invo.msg);
@@ -100,7 +110,7 @@ if (args.length > 0) {
 		serverList = serverUrls.split(',');
 	}
 	if (args.length > 4) {
-		switch (args[3]) {
+		switch (args[4]) {
 			case '1':
 				useRetardTest1 = true;
 				break;
@@ -142,6 +152,16 @@ subscriber.on('message', (topicBuffer, commandBuffer, contentBuffer) => {
 			var sbj = JSON.parse(contentString)[1];
 			var newSubjectId = dm.addSubject(sbj);
 			sendToWebServers(commandString, JSON.stringify([newSubjectId, sbj]));
+			break;
+		case 'add user':
+			var userName = JSON.parse(contentString)[0];
+			var password = JSON.parse(contentString)[1];
+			var exists = dm.addUser(userName, password);
+			if (exists) {
+				console.log('Error: user ' + userName + ' already exists');
+			} else {
+				sendToWebServers(commandString, userName);
+			}
 			break;
 		default:
 			console.log('could not parse ', commandString, ' into a command');

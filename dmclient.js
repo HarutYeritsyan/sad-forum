@@ -52,14 +52,14 @@ function parseCommand(cmd, cb) {
 				cb();
 			});
 		case 'add subject':
-			dm.addSubject(CMD_ARG_1, function () {
-				console.log('subject ' + CMD_ARG_1 + ' added');
+			dm.addSubject(CMD_ARG_1, function (id) {
+				console.log('subject ' + CMD_ARG_1 + ' added with id: ' + id);
 				cb();
 			});
 			break;
 		case 'add user':
-			dm.addUser(CMD_ARG_1, CMD_ARG_2, function () {
-				console.log('user ' + CMD_ARG_1 + ' added');
+			dm.addUser(CMD_ARG_1, CMD_ARG_2, function (exists) {
+				console.log('user ' + CMD_ARG_1 + ' added ' + exists);
 				cb();
 			});
 			break;
@@ -95,7 +95,6 @@ function parseCommand(cmd, cb) {
 				cb();
 			});
 			break;
-		// DONE: complete all forum functions
 	}
 }
 
