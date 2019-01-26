@@ -38,6 +38,10 @@ function sendToWebServers(command, content) {
 }
 
 function sendToDataServers(command, content) {
+	if (useRetardTest2 || useRetardTest3) {
+		console.log( (useRetardTest2 ? 'useRetardTest2' : 'useRetardTest3') + ': waiting for 3000 ms before sendToWebServers');
+		retardo(3000);
+	}
 	publisher.send([DATASERVER_TOPIC, command, content]);
 }
 
