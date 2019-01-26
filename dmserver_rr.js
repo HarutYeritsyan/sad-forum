@@ -69,6 +69,8 @@ responder.on('message', function (data) {
 				break;
 			case 'add user':
 				reply.obj = dm.addUser(invo.u, invo.p);
+				sendToWebServers('add user', invo.u);
+				sendToDataServers('add user', JSON.stringify([invo.u, invo.p]));
 				break;
 			case 'add public message':
 				reply.obj = dm.addPublicMessage(invo.msg);
@@ -142,6 +144,16 @@ subscriber.on('message', (topicBuffer, commandBuffer, contentBuffer) => {
 			var sbj = JSON.parse(contentString)[1];
 			var newSubjectId = dm.addSubject(sbj);
 			sendToWebServers(commandString, JSON.stringify([newSubjectId, sbj]));
+			break;
+		case 'add user':
+			var userName = JSON.parse(contentString)[0];
+			var password = JSON.parse(contentString)[1];
+			var exists = dm.addUser(userName, password);
+			if (exists) {
+				console.log('Error: user ' + userName + ' already exists');
+			} else {
+				sendToWebServers(commandString, userName);
+			}
 			break;
 		default:
 			console.log('could not parse ', commandString, ' into a command');

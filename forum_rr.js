@@ -81,8 +81,6 @@ io.on('connection', function (sock) {
 				sock.emit('new user', 'err', usr, 'El usuario ya existe');
 			} else {
 				sock.emit('new user', 'ack', usr);
-				// TODO: move to dmserver subscription
-				io.emit('new user', 'add', usr);
 			}
 		});
 	});
@@ -149,6 +147,10 @@ subscriber.on('message', function (topicBuffer, commandBuffer, contentBuffer) {
 			replyString = contentBuffer.toString('utf8');
 			var replyContentList = JSON.parse(replyString);
 			io.emit('new subject', 'add', replyContentList[0], replyContentList[1]);
+			break;
+		case 'add user':
+			replyString = contentBuffer.toString('utf8');
+			io.emit('new user', 'add', replyString);
 			break;
 		default:
 			console.log('could not parse ', commandString, ' into a command');

@@ -34,14 +34,14 @@ requester.on('message', function (data) {
 			case 'get subject list':
 			case 'get user list':
 			case 'login':
+			case 'add user':
+			case 'add subject':
 				console.log('We received a reply for: ' + reply.what + ':' + reply.invoId);
 				callbacks[reply.invoId](reply.obj); // call the stored callback, one argument
 				delete callbacks[reply.invoId]; // remove from hash
 				break;
 			case 'add private message':
 			case 'add public message':
-			case 'add subject':
-			case 'add user':
 				console.log('We received a reply for add command');
 				callbacks[reply.invoId](); // call the stored callback, no arguments
 				delete callbacks[reply.invoId]; // remove from hash
