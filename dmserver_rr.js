@@ -30,6 +30,10 @@ function retardo(n) {
 }
 
 function sendToWebServers(command, content) {
+	if (useRetardTest1) {
+		console.log('useRetardTest1: waiting for 3000 ms before sendToWebServers');
+		retardo(3000);
+	}
 	publisher.send([WEBSERVER_TOPIC, command, content]);
 }
 
@@ -102,7 +106,7 @@ if (args.length > 0) {
 		serverList = serverUrls.split(',');
 	}
 	if (args.length > 4) {
-		switch (args[3]) {
+		switch (args[4]) {
 			case '1':
 				useRetardTest1 = true;
 				break;
