@@ -27,7 +27,6 @@ client.on('data', function (data) {
 	dataArray.filter(el => el).forEach(dataElement => {
 		var reply = JSON.parse(dataElement);
 		switch (reply.what) {
-			// TODO complete list of commands
 			case 'get private message list':
 			case 'get public message list':
 			case 'get subject list':
@@ -78,12 +77,6 @@ exports.getPublicMessageList = function (sbj, cb) {
 	invo.sbj = sbj;
 	client.write(JSON.stringify(invo) + MESSAGE_END);
 }
-// Version del local
-
-// exports.getPrivateMessageList = function (u1, u2, cb) {
-// 	var list = dm.getPrivateMessageList (u1,u2);
-// 	cb (list);
-// }
 
 exports.getPrivateMessageList = function (u1, u2, cb) {
 	invo = new Invo('get private message list', cb);
@@ -130,8 +123,6 @@ exports.login = function (u, p, cb) {
 	invo.p = p;
 	client.write(JSON.stringify(invo) + MESSAGE_END);
 }
-
-// DONE: complete the rest of the forum functions.
 
 
 

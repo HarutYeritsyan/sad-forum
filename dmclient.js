@@ -95,7 +95,6 @@ function parseCommand(cmd, cb) {
 				cb();
 			});
 			break;
-		// DONE: complete all forum functions
 	}
 }
 
