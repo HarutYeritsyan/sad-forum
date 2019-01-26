@@ -52,7 +52,6 @@ server = net.createServer(function (sock) {
 				case 'login':
 					reply.obj = dm.login(invo.u, invo.p);
 					break;
-				// DONE: complete all forum functions
 			}
 			sock.write(JSON.stringify(reply) + MESSAGE_END);
 		})

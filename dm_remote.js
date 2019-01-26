@@ -32,14 +32,14 @@ client.on('data', function (data) {
 			case 'get subject list':
 			case 'get user list':
 			case 'login':
+			case 'add user':
+			case 'add subject':
 				console.log('We received a reply for: ' + reply.what + ':' + reply.invoId);
 				callbacks[reply.invoId](reply.obj); // call the stored callback, one argument
 				delete callbacks[reply.invoId]; // remove from hash
 				break;
 			case 'add private message':
 			case 'add public message':
-			case 'add subject':
-			case 'add user':
 				console.log('We received a reply for add command');
 				callbacks[reply.invoId](); // call the stored callback, no arguments
 				delete callbacks[reply.invoId]; // remove from hash
@@ -77,12 +77,6 @@ exports.getPublicMessageList = function (sbj, cb) {
 	invo.sbj = sbj;
 	client.write(JSON.stringify(invo) + MESSAGE_END);
 }
-// Version del local
-
-// exports.getPrivateMessageList = function (u1, u2, cb) {
-// 	var list = dm.getPrivateMessageList (u1,u2);
-// 	cb (list);
-// }
 
 exports.getPrivateMessageList = function (u1, u2, cb) {
 	invo = new Invo('get private message list', cb);
@@ -129,8 +123,6 @@ exports.login = function (u, p, cb) {
 	invo.p = p;
 	client.write(JSON.stringify(invo) + MESSAGE_END);
 }
-
-// DONE: complete the rest of the forum functions.
 
 
 
