@@ -2,8 +2,11 @@ var zmq = require('zmq');
 
 var requester = zmq.socket('req');
 
+var addr = '';
+
 exports.Start = function (host, port, cb) {
 	console.log('Connecting to: ' + host + ':' + port);
+	addr = host + ':' + port;
 	requester.connect(host + ':' + port);
 	cb();
 }
@@ -26,7 +29,6 @@ requester.on('message', function (data) {
 	dataArray.filter(el => el).forEach(dataElement => {
 		var reply = JSON.parse(dataElement);
 		switch (reply.what) {
-			// TODO complete list of commands
 			case 'get private message list':
 			case 'get public message list':
 			case 'get subject list':
@@ -80,7 +82,6 @@ exports.getPrivateMessageList = function (u1, u2, cb) {
 }
 
 exports.addPrivateMessage = function (msg, cb) {
-
 	invo = new Invo('add private message', cb);
 	invo.msg = msg;
 	requester.send(JSON.stringify(invo) + MESSAGE_END);
@@ -118,7 +119,9 @@ exports.login = function (u, p, cb) {
 	requester.send(JSON.stringify(invo) + MESSAGE_END);
 }
 
-// DONE: complete the rest of the forum functions.
-
-
-
+exports.Disconnect = function (cb) {
+	if (requester) {
+		requester.disconnect(addr);
+	}
+	cb();
+}

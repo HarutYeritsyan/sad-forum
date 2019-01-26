@@ -9,6 +9,7 @@ var subscriber = zmq.socket('sub');
 var viewsdir = __dirname + '/views';
 app.set('views', viewsdir)
 
+var WEBSERVER_TOPIC = 'webserver';
 
 // called on connection
 function get_page(req, res) {
@@ -68,7 +69,6 @@ io.on('connection', function (sock) {
 				sock.emit('new subject', 'err', 'El tema ya existe', sbj);
 			} else {
 				sock.emit('new subject', 'ack', id, sbj);
-				io.emit('new subject', 'add', id, sbj);
 			}
 		});
 	});
@@ -81,6 +81,7 @@ io.on('connection', function (sock) {
 				sock.emit('new user', 'err', usr, 'El usuario ya existe');
 			} else {
 				sock.emit('new user', 'ack', usr);
+				// TODO: move to dmserver subscription
 				io.emit('new user', 'add', usr);
 			}
 		});
@@ -132,9 +133,27 @@ io.on('connection', function (sock) {
 	});
 });
 
-subscriber.on('message', function (replyBuffer) {
-	var replyString = replyBuffer.toString('utf8');
-	io.emit('message', replyString);
+subscriber.on('message', function (topicBuffer, commandBuffer, contentBuffer) {
+	var commandString = commandBuffer.toString('utf8');
+	var replyString;
+	switch (commandString) {
+		case 'add public message':
+			replyString = contentBuffer.toString('utf8');
+			io.emit('message', replyString);
+			break;
+		case 'add private message':
+			replyString = contentBuffer.toString('utf8');
+			io.emit('message', replyString);
+			break;
+		case 'add subject':
+			replyString = contentBuffer.toString('utf8');
+			var replyContentList = JSON.parse(replyString);
+			io.emit('new subject', 'add', replyContentList[0], replyContentList[1]);
+			break;
+		default:
+			console.log('could not parse ', commandString, ' into a command');
+			break;
+	}
 });
 
 var args = process.argv.slice(2);
@@ -142,12 +161,13 @@ if (args.length > 0) {
 	HOST = args[0];
 	PORT = args[1];
 	SUBSCRIBE_URL = args[2];
+	WEBSERVER_PORT = args[3];
 }
 
 subscriber.connect(SUBSCRIBE_URL);
-subscriber.subscribe('');
+subscriber.subscribe(WEBSERVER_TOPIC);
 
 dm.Start(HOST, PORT, function () {
 	// Listen for connections !!
-	http.listen(10000, on_startup);
+	http.listen(WEBSERVER_PORT, on_startup);
 });

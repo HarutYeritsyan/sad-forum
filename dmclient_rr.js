@@ -13,23 +13,20 @@ var args = process.argv.slice(2);
 if (args.length > 2) {
 	HOST = args[0];
 	PORT = args[1];
+	CMD = args[2];
 
-	var commandParts = args.slice(2);
-	if (commandParts.length >= 1) {
-		CMD = commandParts[0];
+	var commandArgs = args.slice(3);
+	if (commandArgs.length > 0) {
+		CMD_ARG_1 = commandArgs[0];
 	}
-
-	if (commandParts.length > 1) {
-		CMD_ARG_1 = commandParts[1];
+	if (commandArgs.length > 1) {
+		CMD_ARG_2 = commandArgs[1];
 	}
-	if (commandParts.length > 2) {
-		CMD_ARG_2 = commandParts[2];
+	if (commandArgs.length > 2) {
+		CMD_ARG_3 = commandArgs[2];
 	}
-	if (commandParts.length > 2) {
-		CMD_ARG_3 = commandParts[3];
-	}
-	if (commandParts.length > 2) {
-		CMD_ARG_4 = commandParts[4];
+	if (commandArgs.length > 3) {
+		CMD_ARG_4 = commandArgs[3];
 	}
 
 } else {
@@ -78,7 +75,7 @@ function parseCommand(cmd, cb) {
 			});
 			break;
 		case 'add public message':
-			var msg = new Message(CMD_ARG_1, CMD_ARG_2, CMD_ARG_3, CMD_ARG_4 ? true : false, '');
+			var msg = new Message(CMD_ARG_1, CMD_ARG_2, CMD_ARG_3, false, '');
 			msg.ts = new Date();
 			dm.addPublicMessage(msg, function () {
 				console.log('public message ' + msg.msg + ' added');
@@ -86,8 +83,10 @@ function parseCommand(cmd, cb) {
 			});
 			break;
 		case 'add private message':
-			dm.addPrivateMessage(CMD_ARG_1, function () {
-				console.log('public message ' + CMD_ARG_1 + ' added');
+			var msg = new Message(CMD_ARG_1, CMD_ARG_2, CMD_ARG_3, true, '');
+			msg.ts = new Date();
+			dm.addPrivateMessage(msg, function () {
+				console.log('private message ' + msg.msg + ' added');
 				cb();
 			});
 			break;
@@ -105,11 +104,7 @@ function parseCommand(cmd, cb) {
 			});
 			break;
 		default:
-			dm.getSubjectList(function (ml) {
-				console.log("here it is:")
-				console.log(JSON.stringify(ml));
-				cb();
-			});
+			console.log('panic: command incorrect');
 			break;
 		// DONE: complete all forum functions
 	}
@@ -119,5 +114,8 @@ dm.Start(HOST, PORT, function () {
 	// Write the command to the server
 	parseCommand(CMD, function () {
 		console.log('command executed');
+		dm.Disconnect(function () {
+			console.log('connection closed');
+		});
 	});
 });
